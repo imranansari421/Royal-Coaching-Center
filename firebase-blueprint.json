@@ -1,0 +1,132 @@
+{
+  "entities": {
+    "Registration": {
+      "title": "Student Registration",
+      "description": "Information submitted by students registering at Royal Coaching Centre",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Full name of the student"
+        },
+        "mobile": {
+          "type": "string",
+          "description": "Mobile/phone number of the student"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the student"
+        },
+        "address": {
+          "type": "string",
+          "description": "Address of the student"
+        },
+        "age": {
+          "type": "integer",
+          "description": "Age of the student"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Pending", "Approved", "Rejected"],
+          "description": "Admission status of the student"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Submission date and time"
+        },
+        "viewed": {
+          "type": "boolean",
+          "description": "Whether the admin has viewed this registration"
+        }
+      },
+      "required": ["name", "mobile", "email", "address", "age", "status", "timestamp", "viewed"]
+    },
+    "Setting": {
+      "title": "Website Setting",
+      "description": "Content settings managed by the administrator",
+      "type": "object",
+      "properties": {
+        "slogan": {
+          "type": "string",
+          "description": "Top marquee slogan"
+        },
+        "experienceYears": {
+          "type": "integer",
+          "description": "Years of experience"
+        },
+        "studentsTrained": {
+          "type": "integer",
+          "description": "Number of students trained"
+        },
+        "successRate": {
+          "type": "integer",
+          "description": "Success rate percentage"
+        },
+        "contactPhone1": {
+          "type": "string",
+          "description": "Primary contact number"
+        },
+        "contactPhone2": {
+          "type": "string",
+          "description": "Secondary contact number"
+        },
+        "announcement": {
+          "type": "string",
+          "description": "Latest announcement text"
+        },
+        "faqs": {
+          "type": "array",
+          "description": "Frequently asked questions"
+        },
+        "schedules": {
+          "type": "array",
+          "description": "Weekly class schedule"
+        },
+        "adminEmailForNotifications": {
+          "type": "string",
+          "description": "Admin email where registration alerts are sent"
+        }
+      },
+      "required": ["slogan", "experienceYears", "studentsTrained", "successRate", "contactPhone1", "contactPhone2"]
+    },
+    "Media": {
+      "title": "Media Asset",
+      "description": "Uploaded media metadata like custom logos, gallery images, or videos",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique media identifier"
+        },
+        "mimeType": {
+          "type": "string",
+          "description": "Mime type of the media file"
+        },
+        "totalChunks": {
+          "type": "integer",
+          "description": "Total number of base64 chunks"
+        },
+        "updatedAt": {
+          "type": "integer",
+          "description": "Timestamp of the last modification"
+        }
+      },
+      "required": ["id", "mimeType", "totalChunks", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "registrations/{registrationId}": {
+      "schema": "Registration",
+      "description": "Student registration entries"
+    },
+    "settings/{settingId}": {
+      "schema": "Setting",
+      "description": "Global website content configuration"
+    },
+    "media/{mediaId}": {
+      "schema": "Media",
+      "description": "Global media metadata"
+    }
+  }
+}

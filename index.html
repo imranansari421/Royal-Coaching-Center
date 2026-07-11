@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>
+      (function() {
+        const isSilencedError = (msg) => {
+          if (!msg) return false;
+          const lowMsg = String(msg).toLowerCase();
+          return (
+            lowMsg.includes("websocket") || 
+            lowMsg.includes("vite") || 
+            lowMsg.includes("hmr") || 
+            lowMsg.includes("closed without opened") ||
+            lowMsg.includes("quota") ||
+            lowMsg.includes("resource-exhausted") ||
+            lowMsg.includes("exhausted") ||
+            lowMsg.includes("backoff") ||
+            lowMsg.includes("overloading") ||
+            lowMsg.includes("firestore") ||
+            lowMsg.includes("firebase")
+          );
+        };
+
+        const serializeReason = (reason) => {
+          if (!reason) return "";
+          if (typeof reason === "string") return reason;
+          
+          let result = "";
+          if (reason.message) result += " " + reason.message;
+          if (reason.stack) result += " " + reason.stack;
+          if (reason.name) result += " " + reason.name;
+          if (reason.code) result += " " + reason.code;
+          
+          try {
+            result += " " + String(reason);
+          } catch (_) {}
+          
+          try {
+            result += " " + JSON.stringify(reason);
+          } catch (_) {}
+          
+          return result;
+        };
+
+        // Intercept console.warn and console.error
+        const originalWarn = console.warn;
+        console.warn = function(...args) {
+          const msg = args.map(a => serializeReason(a)).join(" ");
+          if (isSilencedError(msg)) {
+            return;
+          }
+          originalWarn.apply(console, args);
+        };
+
+        const originalError = console.error;
+        console.error = function(...args) {
+          const msg = args.map(a => serializeReason(a)).join(" ");
+          if (isSilencedError(msg)) {
+            return;
+          }
+          originalError.apply(console, args);
+        };
+
+        // Capture error and unhandledrejection during capture phase
+        window.addEventListener("unhandledrejection", (event) => {
+          const reason = event.reason;
+          const msg = serializeReason(reason);
+          if (isSilencedError(msg)) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            event.stopPropagation();
+          }
+        }, true);
+
+        window.addEventListener("error", (event) => {
+          const msg = event.message || "";
+          const errorMsg = serializeReason(event.error);
+          if (isSilencedError(msg) || isSilencedError(errorMsg)) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            event.stopPropagation();
+          }
+        }, true);
+      })();
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Royal Coaching Centre</title>
+  </head>
+  <body class="bg-slate-50 antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "Royal Coaching Centre",
+  "description": "Advanced Student Registration and Administrative Management Dashboard for Royal Coaching Centre, featuring real-time syncing, analytics, admissions tracking, and website content editing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
